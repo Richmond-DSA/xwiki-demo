@@ -1,13 +1,14 @@
 # Note we use the fly secret api to set
 # DB_PASSWORD and DB_HOST
-app = "tenant-xwiki"
+app = "rva-tenant-xwiki"
 primary_region = "iad"
 
 [build]
-    dockerfile = "xwiki:stable-postgres-tomcat"
+    image = "docker.io/xwiki:stable-postgres-tomcat"
 
 [env]
     DB_USER = "xwiki"
+    DB_HOST = "rva-tenant-postgres.internal"
 
 [http_service]
     internal_port = 8080
@@ -20,7 +21,11 @@ primary_region = "iad"
         soft_limit = 200
         hard_limit = 250
 
+[[vm]]
+    size = "shared-cpu-2x"
+    memory = "4gb"
+
 [mounts]
-    source = "xwiki-data"
+    source = "xwiki_app_data"
     destination = "/usr/local/xwiki/data"
-    initial_size = "2gb"
+    initial_size = "20gb"
