@@ -15,17 +15,23 @@ primary_region = "iad"
     force_https = true
     auto_stop_machines = "stop"
     auto_start_machines = true
-    min_machines_running = 0
+    # 0 scales to 0, but XWiki has a nasty long initialization
+    # phase. So for now, keep it running. These images do not boot fast.
+    min_machines_running = 1
     [http_service.concurrency]
         type = "requests"
         soft_limit = 200
         hard_limit = 250
 
 [[vm]]
-    size = "shared-cpu-2x"
-    memory = "4gb"
+    # Note we absolutely need performance mode for initializing the
+    # platform! We can probably scale this down later when
+    # it's simply serving traffic. I also need to figure out
+    # how min_machines_running plays nice scale to zero and warm boots.
+    size = "performance-1x"
+    memory = "8gb"
 
 [mounts]
     source = "xwiki_app_data"
-    destination = "/usr/local/xwiki/data"
+    destination = "/usr/local/xwiki/"
     initial_size = "20gb"
